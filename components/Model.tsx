@@ -4,9 +4,15 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { useKTX2Extension } from '@/lib/loaders';
-import type { InspectControl } from '@/lib/projects';
 
-export type Overrides = Partial<Record<InspectControl['key'], number>>;
+/** Material properties the UI may drive at runtime. */
+export type OverrideKey =
+  | 'roughness'
+  | 'metalness'
+  | 'normalScale'
+  | 'envIntensity';
+
+export type Overrides = Partial<Record<OverrideKey, number>>;
 
 /** Walk every mesh once and apply the inspector's live values. */
 function applyOverrides(root: THREE.Object3D, o: Overrides) {

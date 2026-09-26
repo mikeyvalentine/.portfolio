@@ -1,19 +1,63 @@
-@import 'tailwindcss';
+/*
+ * Layout only. No type, no palette, no decoration — that is yours.
+ * Background is carried over verbatim from portfolio1's styles.css rather than
+ * invented here.
+ */
 
-@theme {
-  --color-ink: #0a0a0a;
-  --color-paper: #f5f3ef;
+:root {
+  /* Frame margins. Change these two values and the whole list follows. */
+  --frame-margin-x: 20vw; /* left / right */
+  --frame-margin-y: 10vh; /* top / bottom */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 html,
 body {
-  background: var(--color-ink);
-  color: var(--color-paper);
-  -webkit-font-smoothing: antialiased;
+  height: 100%;
+  background: #f5f5f5;
 }
 
-/* Keep the canvas from fighting touch scroll on mobile: vertical drags scroll
-   the page, and rotation is claimed only once a horizontal intent is clear. */
-canvas {
-  touch-action: pan-y;
+/* The scroll container. Fixed so the loop can own scrollTop outright rather
+   than fighting the document's own scroll restoration. */
+.scroller {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+}
+
+.frame {
+  margin: var(--frame-margin-y) var(--frame-margin-x);
+}
+
+.frame > video,
+.frame > img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Model frames have no intrinsic aspect, so they need a declared one. */
+.frame[data-kind='model'] {
+  aspect-ratio: 1;
+}
+
+.frame[data-kind='model'] > * {
+  width: 100%;
+  height: 100%;
+}
+
+/* The single WebGL context every model frame draws through. Pointer-transparent
+   so it never swallows scroll; View re-enables events over its own rect. */
+.shared-canvas {
+  position: fixed !important;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
 }

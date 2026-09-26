@@ -62,7 +62,12 @@ export interface StageProps {
   hdri?: string;
   exposure: number;
   aoIntensity: number;
-  /** Suppress postFX while the path tracer owns the frame. */
+  /**
+   * Post chain on/off. Must be false inside a drei `View`: each View renders
+   * its own scene, so one EffectComposer per frame would mean several
+   * composers fighting over a single canvas. In that case put tone mapping on
+   * the renderer instead.
+   */
   enabled?: boolean;
 }
 

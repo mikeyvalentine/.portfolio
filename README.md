@@ -22,37 +22,36 @@ npm run dev
 
 ## How rendering works
 
-Each piece in `lib/projects.ts` declares a `fidelity`:
+The home page is one infinitely-looping list of frames (`components/Frames.tsx`).
+Video and image frames are plain elements. Model frames are drei `View`s, which
+all draw through a **single shared WebGL context** — browsers cap contexts at
+roughly 8-16, so one canvas per frame would fail as the list grew.
 
-- **`raster`** — IBL + N8AO + bloom + AgX. Predictable frame budget, works
-  everywhere. Custom shaders (e.g. parallax occlusion mapping) are fine here.
-- **`hybrid`** — rasterises while you drag, then hands the frame to the path
-  tracer once the camera settles, converging toward offline quality. Best for
-  metal and anything whose look is dominated by reflected environment.
-  **Custom shaders desync the two passes** — see `docs/PIPELINE.md`.
-- **`still`** — poster image or pre-rendered turntable, no realtime render.
+Because each `View` renders its own scene, there is no post-processing chain in
+the list (N composers would fight over one canvas). Tone mapping is on the
+renderer instead. `components/Stage.tsx` still carries the full post chain and
+`@react-three/gpu-pathtracer` is installed, for a focused single-object route
+later.
 
-Not every piece should be realtime. A pre-rendered turntable often looks better
-and loads faster; reserve the interactive treatment for your strongest two to
-four pieces.
+Frame margins are two CSS variables in `app/globals.css`:
 
-## Adding a piece
-
-1. Bake and export from C4D — see **[docs/PIPELINE.md](docs/PIPELINE.md)**.
-2. `node tools/optimize.mjs bake/thing.glb public/models/thing.glb`
-3. Add an entry to `lib/projects.ts`, pasting the printed `stats` block.
+```css
+--frame-margin-x: 20vw;
+--frame-margin-y: 10vh;
+```
 
 ## Layout
 
 ```
-app/                 routes — gallery + /work/[slug]
+app/
+  page.tsx           renders the frame list, nothing else
+  globals.css        layout only — margins live here
 components/
-  Viewer.tsx         canvas, controls, raster/pathtrace gate
-  Stage.tsx          IBL + post chain
-  Model.tsx          GLB loading, unit-fitting, live overrides
-  Inspector.tsx      shader uniform scrubbing
+  Frames.tsx         infinite scroll, shared canvas, View per model frame
+  Stage.tsx          IBL + optional post chain
+  Model.tsx          GLB loading, unit-fitting, material overrides
 lib/
-  projects.ts        the manifest — per-piece look and fidelity
+  work.ts            the work list — order on the page
   loaders.ts         KTX2 transcoder wiring
 tools/optimize.mjs   DCC export -> web asset
 docs/PIPELINE.md     C4D/Redshift bake + export guide
