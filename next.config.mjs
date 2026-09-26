@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // The dev-only badge sat bottom-left, over the frames.
+  devIndicators: false,
   // three ships untranspiled ESM in places; transpiling keeps the 3D deps happy.
   transpilePackages: ['three', 'postprocessing', 'n8ao'],
   headers: async () => [
