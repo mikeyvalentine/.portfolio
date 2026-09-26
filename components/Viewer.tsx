@@ -21,11 +21,7 @@ function Loading() {
 
 export function Viewer({ project }: { project: Project }) {
   const [overrides, setOverrides] = useState<Overrides>(() =>
-    Object.fromEntries(
-      (project.inspect ?? [])
-        .filter((c) => c.default !== undefined)
-        .map((c) => [c.key, c.default!]),
-    ),
+    Object.fromEntries((project.inspect ?? []).map((c) => [c.key, c.default])),
   );
 
   const hybrid = project.fidelity === 'hybrid';

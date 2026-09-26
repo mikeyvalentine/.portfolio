@@ -22,7 +22,7 @@ export function Inspector({
   return (
     <div className="absolute right-4 top-4 w-56 space-y-3 rounded-lg border border-neutral-800 bg-neutral-950/80 p-4 backdrop-blur">
       {controls.map((c) => {
-        const value = values[c.key] ?? c.default ?? c.min;
+        const value = values[c.key] ?? c.default;
         return (
           <label key={c.key} className="block">
             <span className="flex justify-between text-[10px] uppercase tracking-widest text-neutral-400">

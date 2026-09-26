@@ -10,3 +10,7 @@ next-env.d.ts
 /bake/
 /tools/out/
 *.blend1
+
+# Next.js generates these; not useful to version here
+AGENTS.md
+CLAUDE.md

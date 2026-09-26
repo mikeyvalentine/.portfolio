@@ -23,8 +23,11 @@ export interface InspectControl {
   min: number;
   max: number;
   step: number;
-  /** Omit to read the value baked into the asset. */
-  default?: number;
+  /**
+   * Required: the slider must start at the value the material actually has,
+   * or the readout lies until the user touches it.
+   */
+  default: number;
 }
 
 export interface Project {
@@ -42,7 +45,8 @@ export interface Project {
   /** Pre-rendered turntable, for `still` pieces. */
   video?: string;
 
-  hdri: string;
+  /** Path to an .hdr. Omit for the procedural studio environment. */
+  hdri?: string;
   /** Per-piece exposure. Displacement reads very differently at 0.8 vs 1.4. */
   exposure: number;
   /** AO strength. High-frequency surface detail usually wants this pushed. */
@@ -74,13 +78,12 @@ export const projects: Project[] = [
       'Stand-in asset so the loading, compression and shading paths are all exercised. Swap in a real bake and delete this entry.',
     software: ['Blender', 'Substance'],
     model: undefined, // no GLB yet — the viewer falls back to a procedural stand-in
-    hdri: '/hdri/studio.hdr',
     exposure: 1.0,
     aoIntensity: 1.1,
     fidelity: 'hybrid',
     camera: { position: [0, 0.4, 3.2], target: [0, 0, 0], fov: 35 },
     inspect: [
-      { key: 'roughness', label: 'Roughness', min: 0, max: 1, step: 0.01 },
+      { key: 'roughness', label: 'Roughness', min: 0, max: 1, step: 0.01, default: 0.28 },
       { key: 'normalScale', label: 'Normal intensity', min: 0, max: 3, step: 0.01, default: 1 },
       { key: 'envIntensity', label: 'Environment', min: 0, max: 3, step: 0.01, default: 1 },
     ],

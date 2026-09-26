@@ -13,8 +13,8 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
   if (!project) notFound();
 
   return (
-    <main className="flex min-h-screen flex-col">
-      <div className="flex items-baseline justify-between px-6 py-5">
+    <main className="flex h-screen flex-col overflow-hidden">
+      <div className="flex shrink-0 items-baseline justify-between px-6 py-5">
         <div>
           <Link href="/" className="text-xs uppercase tracking-widest text-neutral-500 hover:text-neutral-300">
             ← Work
@@ -45,7 +45,7 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
         <Viewer project={project} />
       </div>
 
-      <p className="max-w-2xl px-6 py-6 text-sm text-neutral-400">{project.summary}</p>
+      <p className="max-w-2xl shrink-0 px-6 py-6 text-sm text-neutral-400">{project.summary}</p>
     </main>
   );
 }
